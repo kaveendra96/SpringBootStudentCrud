@@ -7,10 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -23,7 +20,7 @@ public class StudentController {
     @Autowired
     private MapValidationErrorService mapValidationErrorService;
 
-    //create student
+    //create student and update student
     @PostMapping("")
     public ResponseEntity<?> createStudent(@Valid @RequestBody Student student, BindingResult result){
 
@@ -33,5 +30,22 @@ public class StudentController {
 
         Student studentNew=studentService.saveOrUpdateStudent(student);
         return new ResponseEntity<Student>(studentNew, HttpStatus.CREATED);
+    }
+    //Get student
+    @GetMapping("/{studentId}")
+    public ResponseEntity<?> getStudentById(@PathVariable String studentId){
+        Student student=studentService.findStudentById(studentId);
+        return new ResponseEntity<Student>(student,HttpStatus.OK);
+    }
+    //get all student
+    @GetMapping("/all")
+    public Iterable<Student> getAllStudents(){
+        return studentService.findAllStudents();
+    }
+    //delete given student
+    @GetMapping("/delete/{studentId}")
+    public ResponseEntity<?> deleteProject(@PathVariable String studentId){
+        studentService.deleteStudentById(studentId);
+        return new ResponseEntity<String>("Student id :"+studentId+" was deleted",HttpStatus.OK);
     }
 }
